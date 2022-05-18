@@ -1,0 +1,73 @@
+﻿@using ecommerce_finalproject.Data
+@model List<Order>
+
+@{
+    ViewData["Title"] = "All orders";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>List of all your orders</h4>
+        </p>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Items</th>
+                <th>Total</th>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin")){
+                    <th>User</th>
+                }
+                <th>Order State</th>
+              </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td class="align-middle">@order.Id</td>
+                        <td class="align-middle">
+                            <ul style="list-style-type:none">
+                                @foreach (var item in order.OrderItems)
+                               {
+                                   <li>
+                                       <div class="alert alert-info" role="alert">
+                                           <span class="badge bg-success">@item.Amount</span> [$@item.Price.ToString()] - @item.Products.name
+                                       </div>
+                                   </li>
+                               }
+                            </ul>
+                        </td>
+                        <td class="align-middle">
+                            $@order.OrderItems.Select(m => m.Products.price * m.Amount).Sum().ToString()
+                        </td>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin")){
+                            <td class="align-middle"> @order.UserName </td>
+                        }
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                           
+                                <td class="align-middle">
+                                <form asp-action="EditOrderState"  asp-route-id="@order.Id">
+                                    <label asp-for="@order.OrderState" class="control-label"></label>
+                                    <select asp-for="@order.OrderState" class="form-control"  asp-items="@(Html.GetEnumSelectList<EnumOrderState>())">
+                                        <option selected="selected" value="">Please select</option>
+                                    </select>
+                                    <span asp-validation-for="@order.OrderState" class="text-danger"></span> 
+                                    <input type="submit" class="btn btn-danger btn-sm mt-2"/ value="Save">
+                                </form>
+                                </td>
+                     
+                        }else
+                        {
+                            <td class="align-middle">@order.OrderState</td>
+                        }
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

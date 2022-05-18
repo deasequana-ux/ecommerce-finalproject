@@ -1,0 +1,78 @@
+﻿@model ecommerce_finalproject.Models.ShippingDetails;
+
+@{
+    ViewBag.Title = "Checkout";
+}
+
+<style>
+    .field-validation-error {color:#f00;}
+    .field-validation-valid {display:none;}
+    .input-validation-error {border:1px solid #f00; background-color:#fee;}
+    .validation-summary-errors{font-weight:bold; color:#f00;}
+    .validation-summary-valid{display:none;}
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Order Informations</h2>
+            <p>Please fill in your order information.</p>
+            <hr />
+
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary()
+
+                <div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label">Username</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.UserName, new {@class="form-control"})
+                       @* <span class="badge-danger">
+                            @User.Identity.Name
+                        </span>*@
+                    </div>
+                </div><div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label">Address Header</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.AddressHeader, new {@class="form-control"})
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label">Address</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.Address, new {@class="form-control"})
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label">City</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.City, new {@class="form-control"})
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label">Town</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.Town, new {@class="form-control"})
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label">Post Code</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.PostCode, new {@class="form-control"})
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="FullName" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-primary" asp-action="Checkout">Complete Order</button>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script src="~/lib/jquery-validation/"></script>
+<script src="~/lib/jquery-validation-unobtrusive/"></script>

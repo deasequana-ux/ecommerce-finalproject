@@ -1,0 +1,55 @@
+﻿@model Products
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<div class="row">
+        <div class="col-md-8 offset-2">
+            <div class="card mb-12">
+                <div class="row g-0">
+                    <div class="col-md-12">
+                        <div class="card-header text-white bg-info">
+                            <p class="card-text">
+                                <h5 class="card-title">
+                                    @Model.name
+                                </h5>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="@Model.imageURL" width="100%" alt="@Model.name" />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-text">@Model.description</p>
+                            <p class="card-text"><b>Product Name: </b>@Model.name</p>
+                            <p class="card-text"><b>Category: </b>@Model.ProductCategory</p>
+                        @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <p class="card-text"><b>Stock: </b>@Model.stockCode</p>
+                        }
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        <p class="card-text">
+                            <a class="btn btn-outline-primary float-right" asp-action="Index">
+                                Back to List
+                            </a>
+                            <div class="form-group p-0">
+                            <form asp-action="Delete">
+                                <input type="submit" value="Delete" class="btn btn-danger"/>
+                            </form>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
