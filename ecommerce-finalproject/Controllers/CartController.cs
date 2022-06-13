@@ -3,6 +3,7 @@ using ecommerce_finalproject.Data.Cart;
 using ecommerce_finalproject.Data.Services;
 using ecommerce_finalproject.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace ecommerce_finalproject.Controllers
         public AppDbContext _context { get; set; }
         private readonly ShoppingCart _shoppingCart;
 
-        public CartController(ShoppingCart shoppingCart, AppDbContext context,IOrdersService ordersService)
+        public CartController(ShoppingCart shoppingCart, AppDbContext context, IOrdersService ordersService)
         {
             _shoppingCart = shoppingCart;
             _context = context;
@@ -54,26 +55,25 @@ namespace ecommerce_finalproject.Controllers
 
         public async Task<IActionResult> SaveOrder(ShippingDetails entity)
         {
-            
-                var items = _shoppingCart.GetShoppingCartItems();
 
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                string userEmailAddress = User.FindFirstValue(ClaimTypes.Email);
-                EnumOrderState OrderState = EnumOrderState.Waiting;
-                string UserName = entity.UserName;
-                string AddressHeader = entity.AddressHeader;
-                string Address = entity.Address;
-                string City = entity.City;
-                string Town = entity.Town;
-                string PostCode = entity.PostCode;
+            var items = _shoppingCart.GetShoppingCartItems();
 
-                await _ordersService.StoreOrderAsync(items, userId, userEmailAddress, OrderState, UserName, AddressHeader, Address, City, Town, PostCode);
-                //await _ordersService.UpdateOrderStateAsync(data);
-                await _shoppingCart.ClearShoppingCartAsync();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userEmailAddress = User.FindFirstValue(ClaimTypes.Email);
+            EnumOrderState OrderState = EnumOrderState.Waiting;
+            string UserName = entity.UserName;
+            string AddressHeader = entity.AddressHeader;
+            string Address = entity.Address;
+            string City = entity.City;
+            string Town = entity.Town;
+            string PostCode = entity.PostCode;
 
-                return View("OrderCompleted");
+            await _ordersService.StoreOrderAsync(items, userId, userEmailAddress, OrderState, UserName, AddressHeader, Address, City, Town, PostCode);
+            //await _ordersService.UpdateOrderStateAsync(data);
+            await _shoppingCart.ClearShoppingCartAsync();
+
+            return View("OrderCompleted");
         }
-
 
     }
 }

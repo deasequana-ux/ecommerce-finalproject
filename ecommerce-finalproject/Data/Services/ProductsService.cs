@@ -52,6 +52,15 @@ namespace ecommerce_finalproject.Data.Services
                 
         }
 
+        public async Task<List<Products>> GetProductsByCategoryId(ProductCategory cat)
+        {
+
+            var relatedProducts =  _context.Products.Where(p => p.ProductCategory == cat).ToList();
+
+
+            return relatedProducts;
+        }
+
         public async Task UpdateProductsAsync(NewProductsVM data)
         {
 

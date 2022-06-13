@@ -18,12 +18,9 @@
                                     <a href="javascript:void(0)" onclick="addFav(@item.Id.ToString())">
                                         <i class="bi bi-heart" style="margin-left:400px;"></i>
                                     </a>
-                                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                                    {
-                                        <a class="text-white float-right" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
-                                        <a class="text-white float-right mr-2" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-x-square"></i></a>
-                                    }
-
+                                    <a href="javascript:void(0)" onclick="removeFav(@item.Id.ToString())">
+                                        <i class="bi bi-circle" style="margin-left:400px;"></i>
+                                    </a>
                                 </h5>
                             </p>
                         </div>
@@ -63,7 +60,7 @@
 
         function addFav(itemId) {
 
-            Queries.addFavItem(itemId, function(response) {
+            Queries.addFavItem1(itemId, function(response) {
                 if (response.ResponseCode == 200) {
                     // ikon değişeceksin ve onclick değişecek
                 }
@@ -89,7 +86,7 @@
                 var paramList = "{ itemId:'" + 2 + "' }";
                 $.ajax({
                     type: "POST",
-                    url: "favourite/AddItemFav",
+                    url: "AddItemFav",
                     data: data,
                     dataType: "json",
                     success: successCallback,
@@ -104,7 +101,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "favourite/AddItemFav",
+                    url: "RemoveItemFav",
                     data: data,
                     dataType: "json",
                     success: successCallback,

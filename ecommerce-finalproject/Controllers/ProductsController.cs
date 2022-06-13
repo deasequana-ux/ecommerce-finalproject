@@ -3,6 +3,7 @@ using ecommerce_finalproject.Data.Services;
 using ecommerce_finalproject.Data.Static;
 using ecommerce_finalproject.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,7 +24,7 @@ namespace ecommerce_finalproject.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index() //ilk olarak tüm ürünlerin gözükmesi
+        public async Task<IActionResult> Index(int catId) //ilk olarak tüm ürünlerin gözükmesi
         {
             var allProducts = await _service.GetAllAsync();
             return View(allProducts);
@@ -76,7 +77,7 @@ namespace ecommerce_finalproject.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var productDetails = await _service.GetProductsByIdAsync(id);
-            if(productDetails == null) return View("NotFound");
+            if (productDetails == null) return View("NotFound");
 
             var response = new NewProductsVM()
             {
@@ -86,7 +87,7 @@ namespace ecommerce_finalproject.Controllers
                 Price = productDetails.price,
                 ImageURL = productDetails.imageURL,
                 StockCode = productDetails.stockCode,
-                ProductCategory =productDetails.ProductCategory,
+                ProductCategory = productDetails.ProductCategory,
             };
 
             return View(response);
@@ -121,5 +122,6 @@ namespace ecommerce_finalproject.Controllers
             await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
     }
 }
