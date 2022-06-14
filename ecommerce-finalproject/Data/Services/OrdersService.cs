@@ -70,12 +70,18 @@ namespace ecommerce_finalproject.Data.Services
 
         }
 
-        public async Task UpdateOrderStateAsync(Order data)
+        public async Task UpdateOrderAsync(NewOrdersVM data)
         {
 
             var dbOrder = await _context.Orders.FirstOrDefaultAsync(n => n.Id == data.Id);
             if (dbOrder != null)
             {
+                dbOrder.UserName = data.UserName;
+                dbOrder.AddressHeader = data.AddressHeader;
+                dbOrder.Address = data.Address;
+                dbOrder.City = data.City;
+                dbOrder.Town = data.Town;
+                dbOrder.PostCode = data.PostCode;
                 dbOrder.OrderState = data.OrderState;
 
                 await _context.SaveChangesAsync();
@@ -83,7 +89,5 @@ namespace ecommerce_finalproject.Data.Services
 
 
         }
-
-
     }
 }

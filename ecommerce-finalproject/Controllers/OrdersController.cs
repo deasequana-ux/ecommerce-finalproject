@@ -71,30 +71,63 @@ namespace ecommerce_finalproject.Controllers
             return RedirectToAction(nameof(ShoppingCart));
         }
 
-        //GET
-        public async Task<IActionResult> EditOrderState(int id)
-        {
-            var orderState = await _ordersService.GetOrdersByIdAsync(id);
-            if (orderState == null) return View("NotFound");
+        ////GET
+        //public async Task<IActionResult> EditOrderState(int id)
+        //{
+        //    var orderState = await _ordersService.GetOrdersByIdAsync(id);
+        //    if (orderState == null) return View("NotFound");
 
-            var response = new Order()
+        //    var response = new Order()
+        //    {
+        //        OrderState = orderState.OrderState,
+        //    };
+
+        //    return View(response);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> EditOrderState(int id , Order data)
+        //{
+        //    if (id != data.Id) return View("NotFound");
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(data);
+        //    }
+        //    await _ordersService.UpdateOrderStateAsync(data);
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //GET: Products/Edit
+        public async Task<IActionResult> Edit(int id)
+        {
+            var orderDetails = await _ordersService.GetOrdersByIdAsync(id);
+            if (orderDetails == null) return View("NotFound");
+
+            var response = new NewOrdersVM()
             {
-                OrderState = orderState.OrderState,
+                Id = orderDetails.Id,
+                UserName = orderDetails.UserName,
+                AddressHeader = orderDetails.AddressHeader,
+                Address = orderDetails.Address,
+                City = orderDetails.City,
+                Town = orderDetails.Town,
+                OrderState = orderDetails.OrderState,
             };
 
             return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditOrderState(int id , Order data)
+        public async Task<IActionResult> Edit(int id, NewOrdersVM orders)
         {
-            if (id != data.Id) return View("NotFound");
+            if (id != orders.Id) return View("NotFound");
 
             if (!ModelState.IsValid)
             {
-                return View(data);
+                return View(orders);
             }
-            await _ordersService.UpdateOrderStateAsync(data);
+            await _ordersService.UpdateOrderAsync(orders);
             return RedirectToAction(nameof(Index));
         }
 

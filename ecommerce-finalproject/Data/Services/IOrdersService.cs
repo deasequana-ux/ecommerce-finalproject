@@ -11,7 +11,7 @@ namespace ecommerce_finalproject.Data.Services
     {
         Task StoreOrderAsync(List<ShoppingCartItem> items, string userId, string userEmailAddress,EnumOrderState OrderState, string UserName, string AddressHeader, string Address, string City, string Town, string PostCode);
         Task<List<Order>> GetOrdersByUserIdAndRoleAsync(string userId, string userRole);
-        Task UpdateOrderStateAsync(Order data);
+        Task UpdateOrderAsync(NewOrdersVM data);
         Task<Order> GetOrdersByIdAsync(int id);
     }
 }
