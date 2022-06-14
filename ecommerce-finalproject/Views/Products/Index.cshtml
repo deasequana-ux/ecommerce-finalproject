@@ -15,8 +15,11 @@
                             <p class="card-text">
                                 <h5 class="card-title">
                                     @item.name
-                                    <a href="javascript:void(0)" onclick="addFav(@item.Id.ToString())">
-                                        <i class="bi bi-heart" style="margin-left:400px;"></i>
+                                    <a href="javascript:void(0)" id="btnFav" onclick="addFav(@item.Id.ToString())">
+                                        <i class="bi bi-bag-check-fill"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" id="btnNoFav" onclick="removeFav(@item.Id.ToString())">
+                                        <i class="bi bi-bag-x-fill"></i>
                                     </a>
                                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                                     {
@@ -62,19 +65,26 @@
     <script>
 
         function addFav(itemId) {
-
+            const btn = document.getElementById('btnFav');
             Queries.addFavItem(itemId, function(response) {
                 if (response.ResponseCode == 200) {
                     // ikon değişeceksin ve onclick değişecek
+                     btn.addEventListener('click,'function onClick() {
+                        alert("Item added to favourites...");
+                        btn.style.backgroundColor = 'salmon';
+                    });
                 }
             })
         }
 
         function removeFav(itemId) {
-
+            const btn = document.getElementById('btnNoFav');
             Queries.removeFavItem(itemId, function(response) {
                 if (response.ResponseCode == 200) {
                     // ikon değişeceksin ve onclickss
+                     btn.addEventListener('click,'function onClick() {
+                        alert("Item removed to favourites...");
+                    });
                 }
             })
         }

@@ -5,53 +5,60 @@
 }
 
 <div class="row">
-    @foreach (var item in Model)
+    @if (Model.Any())
     {
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                    @item.name
-                                    <a href="javascript:void(0)" onclick="addFav(@item.Id.ToString())">
-                                        <i class="bi bi-heart" style="margin-left:400px;"></i>
-                                    </a>
-                                    <a href="javascript:void(0)" onclick="removeFav(@item.Id.ToString())">
-                                        <i class="bi bi-circle" style="margin-left:400px;"></i>
-                                    </a>
-                                </h5>
-                            </p>
+        foreach (var item in Model)
+        {
+            <div class="col-md-4 col-xs-6 border-primary mb-3">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-12">
+                            <div class="card-header text-white bg-info">
+                                <p class="card-text">
+                                    <h5 class="card-title">
+                                        @item.name
+                                        <a href="javascript:void(0)" id="btnFav" onclick="addFav(@item.Id.ToString())">
+                                            <i class="bi bi-bag-check-fill"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" id="btnNoFav" onclick="removeFav(@item.Id.ToString())">
+                                            <i class="bi bi-bag-x-fill"></i>
+                                        </a>
+                                    </h5>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="@item.imageURL" width="100%" alt="@item.name" />
+                        </div>
+                        <div class="col-md-6">
+                            <p class="card-text">@item.description</p>
+                            <p class="card-text"><b>Product Name: </b>@item.name</p>
+                            <p class="card-text"><b>Category: </b>@item.ProductCategory</p>
+                            <p class="card-text"><b>Stock: </b>@item.stockCode</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <img src="@item.imageURL" width="100%" alt="@item.name" />
-                    </div>
-                    <div class="col-md-6">
-                        <p class="card-text">@item.description</p>
-                        <p class="card-text"><b>Product Name: </b>@item.name</p>
-                        <p class="card-text"><b>Category: </b>@item.ProductCategory</p>
-                        <p class="card-text"><b>Stock: </b>@item.stockCode</p>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="card-footer">
-                        <p class="card-text">
-                            <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
-                                <i class="bi bi-eye-fill"></i>Show Details
-                            </a>
-                            <a class="btn btn-success text-white @((item.stockCode <= 0 ) ? "disabled" : "")"
+                    <div class="col-md-12">
+                        <div class="card-footer">
+                            <p class="card-text">
+                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
+                                    <i class="bi bi-eye-fill"></i>Show Details
+                                </a>
+                                <a class="btn btn-success text-white @((item.stockCode <= 0 ) ? "disabled" : "")"
                            asp-controller="Orders"
                            asp-action="AddItemToShoppingCart"
                            asp-route-id="@item.Id">
-                                <i class="bi bi-cart-plus"></i>Add to Cart (Price $@item.price.ToString("N"))
-                            </a>
-                        </p>
+                                    <i class="bi bi-cart-plus"></i>Add to Cart (Price $@item.price.ToString("N"))
+                                </a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
+    }
+    else
+    {
+        <h2>No found favourite items...</h2>
     }
 </div>
 
@@ -59,19 +66,26 @@
     <script>
 
         function addFav(itemId) {
-
+            const btn = document.getElementById('btnFav');
             Queries.addFavItem1(itemId, function(response) {
                 if (response.ResponseCode == 200) {
                     // ikon değişeceksin ve onclick değişecek
+                    btn.addEventListener('click,'function onClick() {
+                        alert("Item added to favourites...");
+                        btn.style.backgroundColor = 'salmon';
+                    });
                 }
             })
         }
 
         function removeFav(itemId) {
-
+            const btn = document.getElementById('btnNoFav');
             Queries.removeFavItem(itemId, function(response) {
                 if (response.ResponseCode == 200) {
                     // ikon değişeceksin ve onclickss
+                    btn.addEventListener('click,'function onClick() {
+                        alert("Item removed to favourites...");
+                    });
                 }
             })
         }
