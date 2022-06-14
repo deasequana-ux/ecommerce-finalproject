@@ -32,9 +32,15 @@ else
                 <a class="dropdown-item" asp-controller="Account" asp-action="Users">
                     <i class="bi bi-people"></i> Users
                 </a>
-               </li> 
+                </li>
             }
-            
+            else
+            {
+                 <a class="dropdown-item" asp-controller="Account" asp-action="ResetPassword">
+                    <i class="bi bi-list"></i> Reset Password
+                </a>
+            }
+
         </ul>
     </div>
 

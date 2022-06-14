@@ -71,33 +71,6 @@ namespace ecommerce_finalproject.Controllers
             return RedirectToAction(nameof(ShoppingCart));
         }
 
-        ////GET
-        //public async Task<IActionResult> EditOrderState(int id)
-        //{
-        //    var orderState = await _ordersService.GetOrdersByIdAsync(id);
-        //    if (orderState == null) return View("NotFound");
-
-        //    var response = new Order()
-        //    {
-        //        OrderState = orderState.OrderState,
-        //    };
-
-        //    return View(response);
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> EditOrderState(int id , Order data)
-        //{
-        //    if (id != data.Id) return View("NotFound");
-
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(data);
-        //    }
-        //    await _ordersService.UpdateOrderStateAsync(data);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         //GET: Products/Edit
         public async Task<IActionResult> Edit(int id)
         {
@@ -130,17 +103,5 @@ namespace ecommerce_finalproject.Controllers
             await _ordersService.UpdateOrderAsync(orders);
             return RedirectToAction(nameof(Index));
         }
-
-        //public async Task<IActionResult> CompleteOrder()
-        //{
-        //    var items = _shoppingCart.GetShoppingCartItems();
-        //    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    string userEmailAddress = User.FindFirstValue(ClaimTypes.Email);
-
-        //    await _ordersService.StoreOrderAsync(items, userId,userEmailAddress);
-        //    await _shoppingCart.ClearShoppingCartAsync();   
-
-        //    return View("OrderCompleted");
-        //}
     }
 }

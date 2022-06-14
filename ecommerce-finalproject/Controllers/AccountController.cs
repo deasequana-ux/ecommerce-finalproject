@@ -120,5 +120,60 @@ namespace ecommerce_finalproject.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> ResetPassword(string id)
+        //{
+        //    var usersDetails = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+        //    if (usersDetails == null) return View("NotFound");
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(usersDetails);
+        //    }
+        //    await _userManager.UpdateAsync(usersDetails);
+        //    return RedirectToAction("/Home/Index");
+        //}
+
+
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ChangePasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                // ChangePasswordAsync changes the user password
+                var result = await _userManager.ChangePasswordAsync(user,
+                    model.CurrentPassword, model.NewPassword);
+
+                // The new password did not meet the complexity rules or
+                // the current password is incorrect. Add these errors to
+                // the ModelState and rerender ChangePassword view
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View();
+                }
+
+                // Upon successfully changing the password refresh sign-in cookie
+                await _signInManager.RefreshSignInAsync(user);
+                return View("ResetPasswordConfirmation");
+            }
+
+            return View(model);
+        }
     }
 }
