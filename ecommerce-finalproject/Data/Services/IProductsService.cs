@@ -14,7 +14,6 @@ namespace ecommerce_finalproject.Data.Services
         Task<Products> GetProductsByIdAsync(int id);
 
         Task AddNewProductsAsync(NewProductsVM data);
-        //Task DeleteProductsAsync(NewProductsVM data);
         Task UpdateProductsAsync(NewProductsVM data);
     }
 }

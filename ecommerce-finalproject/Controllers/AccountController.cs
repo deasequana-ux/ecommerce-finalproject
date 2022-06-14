@@ -1,10 +1,13 @@
 ﻿using ecommerce_finalproject.Data;
+using ecommerce_finalproject.Data.Services;
 using ecommerce_finalproject.Data.Static;
 using ecommerce_finalproject.Data.ViewModels;
 using ecommerce_finalproject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Threading.Tasks;
 
 namespace ecommerce_finalproject.Controllers
@@ -23,13 +26,15 @@ namespace ecommerce_finalproject.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Users()
         {
             var users = await _context.Users.ToListAsync();
             return View(users);
         }
+
         public IActionResult Login() => View(new LoginVM());
-        
+   
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM loginVM)
         {
@@ -95,6 +100,24 @@ namespace ecommerce_finalproject.Controllers
         public IActionResult AccessDenied(string ReturnUrl)
         {
             return View();
+        }
+
+
+        //Get Users/Delete/1
+        public async Task<IActionResult> Delete(string id)
+        {
+            var usersDetails = await _userManager.Users.FirstOrDefaultAsync(x=>x.Id == id);
+            if (usersDetails == null) return View("NotFound");
+            return View(usersDetails);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var usersDetails = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (usersDetails == null) return View("NotFound");
+            await _userManager.DeleteAsync(usersDetails);
+            return RedirectToAction(nameof(Users));
         }
 
     }
