@@ -25,7 +25,6 @@ namespace ecommerce_finalproject.Data.Services
                 imageURL = data.ImageURL,
                 price = data.Price,
                 ProductCategory = data.ProductCategory
-                
             };
 
             await _context.Products.AddAsync(newProduct);
@@ -52,14 +51,14 @@ namespace ecommerce_finalproject.Data.Services
                 
         }
 
-        public async Task<List<Products>> GetProductsByCategoryId(ProductCategory cat)
-        {
+        //public async Task<List<Products>> GetProductsByCategoryId(ProductCategory cat)
+        //{
 
-            var relatedProducts =  _context.Products.Where(p => p.ProductCategory == cat).ToList();
+        //    var relatedProducts =  _context.Products.Where(p => p.ProductCategory == cat).ToList();
 
 
-            return relatedProducts;
-        }
+        //    return relatedProducts;
+        //}
 
         public async Task UpdateProductsAsync(NewProductsVM data)
         {

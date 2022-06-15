@@ -17,16 +17,19 @@ namespace ecommerce_finalproject.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductsService _service;
+        private readonly AppDbContext _context;
 
-        public ProductsController(IProductsService service)
+        public ProductsController(IProductsService service,AppDbContext context)
         {
             _service = service;
+            _context = context;
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int catId) //ilk olarak tüm ürünlerin gözükmesi
+        public async Task<IActionResult> Index() //ilk olarak tüm ürünlerin gözükmesi
         {
             var allProducts = await _service.GetAllAsync();
+            //var categories = _context.Category.Where(x => x.Id == allProducts.FirstOrDefault().Id);
             return View(allProducts);
         }
 

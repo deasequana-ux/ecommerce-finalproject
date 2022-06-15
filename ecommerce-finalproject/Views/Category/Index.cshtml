@@ -1,0 +1,28 @@
+﻿@model List<Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Categories</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>ID</th>
+        <th>Category Name</th>
+        <th>Detail</th>
+    </tr>
+    <tbody>
+        @foreach(var item in Model){
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.CategoryName</td>
+                <td><a class="btn btn-danger" asp-action="CategoryDetail" asp-route-id="@item.Id">Products</a></td>
+                <td><a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a></td>
+                <td><a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash"></i></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-dark" asp-action="Create"><i class="bi bi-plus-circle"></i>Add Category</a>

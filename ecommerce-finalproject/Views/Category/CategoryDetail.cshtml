@@ -1,0 +1,33 @@
+﻿@model List<Products>
+
+@{
+    ViewBag.Title = "CategoryDetail";
+}
+
+<table class="table table-bordered">
+    <tr>
+        <th>ID</th>
+        <th>Product Name</th>
+    </tr>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.name</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <p>There are no products in this category...</p>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-outline-primary float-right" asp-action="Index">
+    Back to List
+</a>

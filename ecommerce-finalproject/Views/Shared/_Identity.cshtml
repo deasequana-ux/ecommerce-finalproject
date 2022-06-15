@@ -32,12 +32,20 @@ else
                 <a class="dropdown-item" asp-controller="Account" asp-action="Users">
                     <i class="bi bi-people"></i> Users
                 </a>
+                </li> 
+                <li>
+                <a class="dropdown-item" asp-controller="Category" asp-action="Index">
+                    <i class="bi bi-tags"></i> Categories
+                </a>
                 </li>
             }
             else
             {
                  <a class="dropdown-item" asp-controller="Account" asp-action="ResetPassword">
-                    <i class="bi bi-list"></i> Reset Password
+                    <i class="bi bi-key"></i> Reset Password
+                </a>
+                 <a class="dropdown-item" asp-controller="Favourite" asp-action="Index">
+                    <i class="bi bi-heart"></i> Favourites
                 </a>
             }
 

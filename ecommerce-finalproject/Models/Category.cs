@@ -13,7 +13,8 @@ namespace ecommerce_finalproject.Models
         [Key]
         public int Id { get; set; }
 
-        [Display(Name = "Category Name")]
+        [Display(Name = "Category name")]
+        [Required(ErrorMessage = "Category Name is required")]
         public string CategoryName { get; set; }
 
     }

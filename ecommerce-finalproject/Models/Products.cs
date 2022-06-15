@@ -23,7 +23,9 @@ namespace ecommerce_finalproject.Models
         [Display(Name = "Profile Picture URL")]
         public string imageURL { get; set; }
         public int stockCode { get; set; }
-        public ProductCategory ProductCategory { get; set; }
+        public int ProductCategory { get; set; }
+        //public string CategoryName { get; set; }
+        //public ProductCategory ProductCategory { get; set; }
 
     }
 }

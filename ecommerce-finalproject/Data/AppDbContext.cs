@@ -24,8 +24,8 @@ namespace ecommerce_finalproject.Data
        //Orders related tables
        public DbSet<Order> Orders { get; set; }
        public DbSet<OrderItem> OrderItems { get;set; }
-       public DbSet<Category> Categories { get;set; }
-       public DbSet<CategoryProduct> CategoryProducts { get;set; }
+       public DbSet<Category> Category { get;set; }
+       public DbSet<CategoryProduct> CategoryProduct { get;set; }
        public DbSet<ShoppingCartItem> ShoppingCartItems { get;set; }
     
     }

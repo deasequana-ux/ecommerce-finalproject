@@ -40,8 +40,7 @@ namespace ecommerce_finalproject.Data
                             price = 30.00,
                             imageURL ="/img/asdsad.jpg",
                             stockCode = 5,
-                            ProductCategory = ProductCategory.KnittedScrunchies,
-
+                            ProductCategory = 2,
                         },
                         new Products()
                         {
@@ -59,8 +58,7 @@ namespace ecommerce_finalproject.Data
                             price = 30.00,
                             imageURL ="/img/ekose1-2.jpg",
                             stockCode = 5,
-                            ProductCategory = ProductCategory.HandmadeScrunchies,
-
+                            ProductCategory = 1,
                         },
                         new Products()
                         {
@@ -77,8 +75,7 @@ namespace ecommerce_finalproject.Data
                             price = 30.00,
                             imageURL ="/img/ekose2.jpg",
                             stockCode = 5,
-                            ProductCategory = ProductCategory.HandmadeScrunchies,
-
+                            ProductCategory = 1,
                         }
                     });
                     context.SaveChanges();
