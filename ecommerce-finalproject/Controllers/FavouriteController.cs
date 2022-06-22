@@ -1,6 +1,7 @@
 ﻿using ecommerce_finalproject.Data;
 using ecommerce_finalproject.Data.Services;
 using ecommerce_finalproject.Data.Static;
+using ecommerce_finalproject.Data.ViewModels;
 using ecommerce_finalproject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,25 +17,45 @@ namespace ecommerce_finalproject.Controllers
     public class FavouriteController : Controller
     {
         private readonly IProductsService _service;
+        private readonly AppDbContext _context;
 
-        public FavouriteController(IProductsService service)
+        public FavouriteController(IProductsService service, AppDbContext context)
         {
             _service = service;
+            _context = context;
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Index(int catId) //ilk olarak tüm ürünlerin gözükmesi
         {
-            var favItems = HttpContext.Session.GetString("favItems");
 
-            if (!string.IsNullOrEmpty(favItems))
+            var favItemsCookie = Request.Cookies["favItems"];
+
+            if (!string.IsNullOrEmpty(favItemsCookie))
             {
-                var itemIds = favItems.Split(',').ToList();
+                var itemIds = favItemsCookie.Split(',').ToList();
                 var allProducts = await _service.GetAllAsync();
 
                 var relatedProducts = allProducts.Where(p => itemIds.Any(i => i == p.Id.ToString())).ToList();
+                var favList = new List<ProductVM>();
+                var categoryList = _context.Category.ToList();
 
-                return View(relatedProducts);
+                foreach (var product in relatedProducts)
+                {
+                    favList.Add(new ProductVM()
+                    {
+                        Id = product.Id,
+                        description = product.description,
+                        CategoryName = categoryList.FirstOrDefault(c => c.Id == product.ProductCategory).CategoryName,
+                        imageURL = product.imageURL,
+                        name = product.name,
+                        price = product.price,
+                        stockCode = product.stockCode,
+                        ProductCategory = product.ProductCategory
+                    });
+                }
+
+                return View(favList);
             }
             else
             {
@@ -46,74 +67,87 @@ namespace ecommerce_finalproject.Controllers
         [AllowAnonymous]
         public JsonResult RemoveItemFav(string itemId)
         {
-            var favItems = HttpContext.Session.GetString("favItems");
-
-            if (string.IsNullOrEmpty(favItems))
+            try
             {
-                return Json(new
+                var favItemsCookie = Request.Cookies["favItems"];
+
+                if (!string.IsNullOrEmpty(favItemsCookie))
                 {
-                    ResponseMessage = "can not found any product in fav list",
-                    StatusCode = 301
-                });
-            }
-            else
-            {
-                var itemList = favItems.Split(',').ToList();
+                    var itemList = favItemsCookie.Split(',').ToList();
+                    itemList.Remove(itemId);
 
-                if (itemList.Any(i => i == itemId))
-                {
-                    itemList.RemoveAll(i => i == itemId);
+                    var newList = string.Join(",", itemList);
 
-                    var newItemList = string.Join(",", itemList);
+                    CookieOptions option = new CookieOptions();
+                    option.Expires = DateTime.Now.AddDays(7);
+                    Response.Cookies.Append("favItems", newList, option);
 
-                    HttpContext.Session.SetString("favItems", newItemList);
+                    return Json(new
+                    {
+                        StatusCode = 200,
+                    });
                 }
                 else
                 {
                     return Json(new
                     {
-                        ResponseMessage = "Product id not found",
-                        StatusCode = 301
+                        StatusCode = 300,
                     });
                 }
-            }
 
-            return Json(new
+            }
+            catch (Exception ex)
             {
-                StatusCode = 200,
-            });
+
+                return Json(new
+                {
+                    StatusCode = 300,
+                });
+            }
         }
 
         [AllowAnonymous]
         public JsonResult AddItemFav(string itemId)
         {
-            var favItems = HttpContext.Session.GetString("favItems");
-            var favItemsCookie = Request.Cookies["favItems"];
 
-            if (string.IsNullOrEmpty(favItemsCookie))
+            try
             {
-                CookieOptions option = new CookieOptions();
-                option.Expires = DateTime.Now.AddDays(1);
-                Response.Cookies.Append("favItems", itemId, option);
+                var favItemsCookie = Request.Cookies["favItems"];
 
-                var favItemsCookie1 = Request.Cookies["favItems"];
-            }
-            else
-            {
-                var itemList = favItems.Split(',').ToList();
-
-                if (!itemList.Any(i=>i == itemId))
+                if (string.IsNullOrEmpty(favItemsCookie))
                 {
-                    favItems += "," + itemId.ToString();
-                    HttpContext.Session.SetString("favItems", favItems);
-                }
-            }
-            
-            return Json(new
-            {
-                StatusCode = 200,
-            });
-        }
+                    CookieOptions option = new CookieOptions();
+                    option.Expires = DateTime.Now.AddDays(7);
+                    Response.Cookies.Append("favItems", itemId, option);
 
+                }
+                else
+                {
+                    var itemList = favItemsCookie.Split(',').ToList();
+
+                    if (!itemList.Any(i => i == itemId))
+                    {
+                        favItemsCookie += "," + itemId.ToString();
+
+                        CookieOptions option = new CookieOptions();
+                        option.Expires = DateTime.Now.AddDays(7);
+                        Response.Cookies.Append("favItems", favItemsCookie, option);
+                    }
+                }
+                return Json(new
+                {
+                    StatusCode = 200,
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new
+                {
+                    StatusCode = 300,
+                });
+            }
+
+        }
     }
 }

@@ -1,11 +1,12 @@
-﻿@model IEnumerable<Products>
+﻿@using ecommerce_finalproject.Data.ViewModels
+@model List<ProductVM>
 
 @{
-    ViewData["Title"] = "List of Products";
+    ViewData["Title"] = "List of Favourite Products";
 }
 
 <div class="row">
-    @if (Model.Any())
+    @if (Model != null && Model.Any())
     {
         foreach (var item in Model)
         {
@@ -17,11 +18,11 @@
                                 <p class="card-text">
                                     <h5 class="card-title">
                                         @item.name
-                                        <a href="javascript:void(0)" id="btnFav" onclick="addFav(@item.Id.ToString())">
+                                        @*<a href="javascript:void(0)" id="btnFav" onclick="addFav(@item.Id.ToString())">
                                             <i class="bi bi-bag-check-fill"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" id="btnNoFav" onclick="removeFav(@item.Id.ToString())">
-                                            <i class="bi bi-bag-x-fill"></i>
+                                        </a>*@
+                                        <a class="text-white float-right" href="javascript:void(0)" id="btnNoFav" onclick="removeFav(@item.Id.ToString())">
+                                            <i class="bi bi-x-square"></i>
                                         </a>
                                     </h5>
                                 </p>
@@ -33,14 +34,14 @@
                         <div class="col-md-6">
                             <p class="card-text">@item.description</p>
                             <p class="card-text"><b>Product Name: </b>@item.name</p>
-                            <p class="card-text"><b>Category: </b>@item.ProductCategory</p>
+                            <p class="card-text"><b>Category: </b>@item.CategoryName</p>
                             <p class="card-text"><b>Stock: </b>@item.stockCode</p>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="card-footer">
                             <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
+                                <a class="btn btn-outline-primary float-right" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
                                     <i class="bi bi-eye-fill"></i>Show Details
                                 </a>
                                 <a class="btn btn-success text-white @((item.stockCode <= 0 ) ? "disabled" : "")"
@@ -67,40 +68,30 @@
 
         function addFav(itemId) {
             const btn = document.getElementById('btnFav');
-            Queries.addFavItem1(itemId, function(response) {
-                if (response.ResponseCode == 200) {
-                    // ikon değişeceksin ve onclick değişecek
-                    btn.addEventListener('click,'function onClick() {
-                        alert("Item added to favourites...");
-                        btn.style.backgroundColor = 'salmon';
-                    });
-                }
+            Queries.addFavItem(itemId, function(response) {
+               alert("Item added to favourites...");
+                
             })
         }
 
         function removeFav(itemId) {
             const btn = document.getElementById('btnNoFav');
+
+            alert("Item removed to favourites...");
             Queries.removeFavItem(itemId, function(response) {
-                if (response.ResponseCode == 200) {
-                    // ikon değişeceksin ve onclickss
-                    btn.addEventListener('click,'function onClick() {
-                        alert("Item removed to favourites...");
-                    });
-                }
+                 location.reload();
             })
         }
 
         Queries = {
-
             addFavItem: function(itemId, successCallback, errorCallback) {
-
                 var data = {
                     itemId: itemId
                 };
-                var paramList = "{ itemId:'" + 2 + "' }";
+               
                 $.ajax({
                     type: "POST",
-                    url: "AddItemFav",
+                    url: "favourite/AddItemFav",
                     data: data,
                     dataType: "json",
                     success: successCallback,
@@ -108,14 +99,13 @@
                 });
             },
             removeFavItem: function(itemId, successCallback, errorCallback) {
-
                 var data = {
                     itemId: itemId
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: "RemoveItemFav",
+                    url: "favourite/RemoveItemFav",
                     data: data,
                     dataType: "json",
                     success: successCallback,

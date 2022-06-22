@@ -1,4 +1,5 @@
-﻿@model Products
+﻿@using ecommerce_finalproject.Data.ViewModels
+@model ProductVM
 
 @{
     ViewData["Title"] = "Product Details";
@@ -24,7 +25,7 @@
                         <div class="card-body">
                             <p class="card-text">@Model.description</p>
                             <p class="card-text"><b>Product Name: </b>@Model.name</p>
-                            <p class="card-text"><b>Category: </b>@Model.ProductCategory</p>
+                            <p class="card-text"><b>Category: </b>@Model.CategoryName</p>
                         @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
                             <p class="card-text"><b>Stock: </b>@Model.stockCode</p>

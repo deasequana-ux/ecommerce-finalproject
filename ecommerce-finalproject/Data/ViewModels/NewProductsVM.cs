@@ -35,7 +35,8 @@ namespace ecommerce_finalproject.Models
         [Display(Name = "Select a category")]
         [Required(ErrorMessage = "Product category is required")]
         public int ProductCategory { get; set; }
-        //public string CategoryName { get; set; }
+
+        public List<Category> Categories { get; set; } = new List<Category>();
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ecommerce_finalproject.Data;
 using ecommerce_finalproject.Data.Services;
 using ecommerce_finalproject.Data.Static;
+using ecommerce_finalproject.Data.ViewModels;
 using ecommerce_finalproject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,8 +30,25 @@ namespace ecommerce_finalproject.Controllers
         public async Task<IActionResult> Index() //ilk olarak tüm ürünlerin gözükmesi
         {
             var allProducts = await _service.GetAllAsync();
-            //var categories = _context.Category.Where(x => x.Id == allProducts.FirstOrDefault().Id);
-            return View(allProducts);
+            var productList = new List<ProductVM>();
+            var categoryList =  _context.Category.ToList();
+
+            foreach (var product in allProducts)
+            {
+                productList.Add(new ProductVM()
+                {
+                    Id = product.Id,
+                    description = product.description,
+                    CategoryName = categoryList.FirstOrDefault(c => c.Id == product.ProductCategory).CategoryName,
+                    imageURL = product.imageURL,
+                    name = product.name,
+                    price = product.price,
+                    stockCode = product.stockCode,
+                    ProductCategory = product.ProductCategory
+                });
+            }
+
+            return View(productList);
         }
 
         [AllowAnonymous]
@@ -42,7 +60,26 @@ namespace ecommerce_finalproject.Controllers
             {
                 var filteredResult = allProducts.Where(n => n.name.ToLower().Contains(searchString.ToLower()) || n.description.ToLower().Contains(searchString.ToLower())).ToList();
 
-                return View("Index", filteredResult);
+                var productList = new List<ProductVM>();
+                var categoryList = _context.Category.ToList();
+
+                foreach (var product in filteredResult)
+                {
+                    productList.Add(new ProductVM()
+                    {
+                        Id = product.Id,
+                        description = product.description,
+                        CategoryName = categoryList.FirstOrDefault(c => c.Id == product.ProductCategory).CategoryName,
+                        imageURL = product.imageURL,
+                        name = product.name,
+                        price = product.price,
+                        stockCode = product.stockCode,
+                        ProductCategory = product.ProductCategory
+                    });
+                }
+
+
+                return View("Index", productList);
             }
 
             return View("Index", allProducts);
@@ -53,7 +90,19 @@ namespace ecommerce_finalproject.Controllers
         public async Task<IActionResult> Details(int id)  //bir ürünün show details butonuna tıklayınca detay sayfasının gelmesi
         {
             var productDetail = await _service.GetProductsByIdAsync(id);
-            return View(productDetail);
+            var category = _context.Category.FirstOrDefault(cl => cl.Id == productDetail.ProductCategory)?.CategoryName;
+            var product = new ProductVM()
+            {
+                Id = productDetail.Id,
+                description = productDetail.description,
+                CategoryName = category,
+                imageURL = productDetail.imageURL,
+                name = productDetail.name,
+                price = productDetail.price,
+                stockCode = productDetail.stockCode,
+                ProductCategory = productDetail.ProductCategory
+            };
+            return View(product);
         }
 
         //GET: Products/Create 
@@ -61,7 +110,11 @@ namespace ecommerce_finalproject.Controllers
         {
             ViewData["Welcome"] = "Welcome to our store";
             ViewBag.Description = "This is the store description.";
-            return View();
+
+            var model = new NewProductsVM();
+            model.Categories = _context.Category.ToList();
+
+            return View(model);
         }
 
         [HttpPost]
@@ -93,6 +146,7 @@ namespace ecommerce_finalproject.Controllers
                 ProductCategory = productDetails.ProductCategory,
             };
 
+            response.Categories = _context.Category.ToList();
             return View(response);
         }
 

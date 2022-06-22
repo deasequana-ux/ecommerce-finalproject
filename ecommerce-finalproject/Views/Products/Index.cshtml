@@ -1,132 +1,122 @@
-﻿@model IEnumerable<Products>
+﻿@using ecommerce_finalproject.Data.ViewModels
+@model List<ProductVM>
 
 @{
-    ViewData["Title"] = "List of Products";
+	ViewData["Title"] = "List of Products";
 }
 
 <div class="row">
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                    @item.name
-                                    @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
-                                    {
-                                        <a href="javascript:void(0)" id="btnFav" onclick="addFav(@item.Id.ToString())">
-                                            <i class="bi bi-bag-check-fill"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" id="btnNoFav" onclick="removeFav(@item.Id.ToString())">
-                                            <i class="bi bi-bag-x-fill"></i>
-                                        </a>
-                                    }
+	@foreach (var item in Model)
+	{
+		<div class="col-md-4 col-xs-6 border-primary mb-3">
+			<div class="card mb-3" style="max-width: 540px;">
+				<div class="row g-0">
+					<div class="col-md-12">
+						<div class="card-header text-white bg-info">
+							<p class="card-text">
+								<h5 class="card-title">
+									@item.name
+									@if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+									{
+										<a class="text-white float-right" href="javascript:void(0)" id="btnFav" onclick="addFav(@item.Id.ToString())">
+											<i class="bi bi-heart"></i>
+										</a>
+										@*<a class="text-white float-right mr-2" href="javascript:void(0)" id="btnNoFav" onclick="removeFav(@item.Id.ToString())">
+											<i class="bi bi-bag-x-fill"></i>
+										</a>*@
+									}
 
-                                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                                    {
-                                        <a class="text-white float-right" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
-                                        <a class="text-white float-right mr-2" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-x-square"></i></a>
-                                    }
+									@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+									{
+										<a class="text-white float-right" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
+										<a class="text-white float-right mr-2" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-x-square"></i></a>
+									}
 
-                                </h5>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="@item.imageURL" width="100%" alt="@item.name" />
-                    </div>
-                    <div class="col-md-6">
-                        <p class="card-text">@item.description</p>
-                        <p class="card-text"><b>Product Name: </b>@item.name</p>
-                        <p class="card-text"><b>Category: </b>@item.ProductCategory</p>
-                        <p class="card-text"><b>Stock: </b>@item.stockCode</p>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="card-footer">
-                        <p class="card-text">
-                            <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
-                                <i class="bi bi-eye-fill"></i>Show Details
-                            </a>
-                            <a class="btn btn-success text-white @((item.stockCode <= 0 ) ? "disabled" : "")"
-                           asp-controller="Orders"
-                           asp-action="AddItemToShoppingCart"
-                           asp-route-id="@item.Id">
-                                <i class="bi bi-cart-plus"></i>Add to Cart (Price $@item.price.ToString("N"))
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+								</h5>
+							</p>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<img src="@item.imageURL" width="100%" alt="@item.name" />
+					</div>
+					<div class="col-md-6">
+						<p class="card-text">@item.description</p>
+						<p class="card-text"><b>Product Name: </b>@item.name</p>
+						<p class="card-text"><b>Category: </b>@item.CategoryName</p>
+						<p class="card-text"><b>Stock: </b>@item.stockCode</p>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="card-footer">
+						<p class="card-text">
+							<a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
+								<i class="bi bi-eye-fill"></i>Show Details
+							</a>
+							<a class="btn btn-success text-white @((item.stockCode <= 0 ) ? "disabled" : "")"
+						   asp-controller="Orders"
+						   asp-action="AddItemToShoppingCart"
+						   asp-route-id="@item.Id">
+								<i class="bi bi-cart-plus"></i>Add to Cart (Price $@item.price.ToString("N"))
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 </div>
 
 @section scripts{
-    <script>
+	<script>
 
-        function addFav(itemId) {
-            const btn = document.getElementById('btnFav');
-            Queries.addFavItem(itemId, function(response) {
-                if (response.ResponseCode == 200) {
-                    // ikon değişeceksin ve onclick değişecek
-                    btn.addEventListener('click,'function onClick() {
-                        alert("Item added to favourites...");
-                        btn.style.backgroundColor = 'salmon';
-                    });
-                }
-            })
-        }
+		function addFav(itemId) {
+			const btn = document.getElementById('btnFav');
+			Queries.addFavItem(itemId, function(response) {
+				alert("Item added to favourites...");
+			})
+		}
 
-        function removeFav(itemId) {
-            const btn = document.getElementById('btnNoFav');
-            Queries.removeFavItem(itemId, function(response) {
-                if (response.ResponseCode == 200) {
-                    // ikon değişeceksin ve onclickss
-                    btn.addEventListener('click,'function onClick() {
-                        alert("Item removed to favourites...");
-                    });
-                }
-            })
-        }
+		function removeFav(itemId) {
+			const btn = document.getElementById('btnNoFav');
+			Queries.removeFavItem(itemId, function(response) {
+				alert("Item removed to favourites...");
+			})
+		}
 
-        Queries = {
+		Queries = {
 
-            addFavItem: function(itemId, successCallback, errorCallback) {
+			addFavItem: function(itemId, successCallback, errorCallback) {
 
-                var data = {
-                    itemId: itemId
-                };
-                var paramList = "{ itemId:'" + 2 + "' }";
-                $.ajax({
-                    type: "POST",
-                    url: "favourite/AddItemFav",
-                    data: data,
-                    dataType: "json",
-                    success: successCallback,
-                    error: errorCallback
-                });
-            },
-            removeFavItem: function(itemId, successCallback, errorCallback) {
+				var data = {
+					itemId: itemId
+				};
+				var paramList = "{ itemId:'" + 2 + "' }";
+				$.ajax({
+					type: "POST",
+					url: "favourite/AddItemFav",
+					data: data,
+					dataType: "json",
+					success: successCallback,
+					error: errorCallback
+				});
+			},
+			removeFavItem: function(itemId, successCallback, errorCallback) {
 
-                var data = {
-                    itemId: itemId
-                };
+				var data = {
+					itemId: itemId
+				};
 
-                $.ajax({
-                    type: "POST",
-                    url: "favourite/AddItemFav",
-                    data: data,
-                    dataType: "json",
-                    success: successCallback,
-                    error: errorCallback
-                });
-            }
-        }
-    </script>
+				$.ajax({
+					type: "POST",
+					url: "favourite/RemoveItemFav",
+					data: data,
+					dataType: "json",
+					success: successCallback,
+					error: errorCallback
+				});
+			}
+		}
+	</script>
 }
 
-    @await Html.PartialAsync("_CreateItem", "Products")
+	@await Html.PartialAsync("_CreateItem", "Products")

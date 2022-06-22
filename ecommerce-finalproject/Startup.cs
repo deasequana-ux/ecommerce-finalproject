@@ -35,6 +35,8 @@ namespace ecommerce_finalproject
             //DbContext configuration
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
 
+            services.AddHttpContextAccessor();
+
             //Services configuration  
             services.AddScoped<IProductsService, ProductsService>();
             services.AddScoped<IOrdersService, OrdersService>();
